@@ -1,38 +1,35 @@
-import { Request, Response } from "express";
-import catchAsync from "../../shared/catchAsync";
-import { PatientInput } from "./user.interface";
+import { Request } from "express";
 import { prisma } from "../../shared/prisma";
 import bcrypt from "bcryptjs";
-import config from "../../../config";
+import { fileUploader } from "../../helpers/fileUploader";
 
- 
 
-const createPatient = async (payload:PatientInput ) =>{
-  
-    const hashPassword = await bcrypt.hash(payload.password,10)
-    const result = await prisma.$transaction(async (tnx) =>{
-        
+const createPatient = async (req: Request) => {
+
+    if (req.file) {
+        const uploadResult = await fileUploader.uploadToCloudinary(req.file)
+        // req.body.patient.profilePhoto = uploadResult?.secure_url
+        console.log(uploadResult)
+    }
+
+    const hashPassword = await bcrypt.hash(req.body.password, 10);
+
+    const result = await prisma.$transaction(async (tnx) => {
         await tnx.user.create({
-            data : {
-                email :payload.email,
+            data: {
+                email: req.body.patient.email,
                 password: hashPassword
             }
-        }) 
+        });
 
-
-       return  await tnx.patient.create({
-            data : {
-                name: payload.name,
-                email: payload.email
-            }
+        return await tnx.patient.create({
+            data: req.body.patient
         })
-        
-    }) 
-    return result
+    })
 
-}  
+    return result;
+}
 
-
-export const userService = {
+export const UserService = {
     createPatient
 }
