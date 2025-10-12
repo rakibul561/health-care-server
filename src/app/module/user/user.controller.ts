@@ -40,17 +40,18 @@ const createDoctor = catchAsync(async (req: Request, res: Response) => {
 
 const GetALlForm = catchAsync(async (req: Request, res: Response) => {
 
-    const filters = pick(req.query, ["status", "role", "email"])
+    const filters = pick(req.query, ["status", "role", "email", "search"])
     const options = pick(req.query, ["page", "limit", "sortBy", "sortOrder"])
 
     const {limit, page, search, sortBy, sortOrder, role, status} = req.query;
 
-    const result = await UserService.GetALlForm({limit: Number(limit), page:Number(page), search, sortBy, sortOrder, role, status});
+    const result = await UserService.GetALlForm(filters, options);
     sendResponse(res, {
         statusCode: 201,
         success: true,
         message: "Data  successfuly!",
-        data: result
+        meta: result.meta,
+        data: result.data
     })
 });
 
