@@ -94,7 +94,7 @@ const createDoctor = async (req: Request): Promise<Doctor> => {
 };
 
 
-const GetALlForm = async ({limit, page, search }: {page: Number, limit: Number, search:any}) => {
+const GetALlForm = async ({limit, page, search, sortBy, sortOrder, role , status }: {page: Number, limit: Number, search:any, sortBy:any, sortOrder:any, role:any , status:any}) => {
 
     const pageNum = Number(page) || 1;
     const limitNum = Number(limit) || 10;
@@ -107,7 +107,14 @@ const GetALlForm = async ({limit, page, search }: {page: Number, limit: Number, 
             email : {
                 contains: search,
                 mode: "insensitive"
-            }
+            },
+            role : role,
+            status: status
+        }, 
+        orderBy:sortBy && sortOrder ? {
+            [sortBy] : sortOrder
+        }: {
+            createdAt: "desc"
         }
     })
     return result;
