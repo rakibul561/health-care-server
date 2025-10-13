@@ -4,8 +4,9 @@ import bcrypt from "bcryptjs";
 import { Admin, Doctor, Prisma, UserRole } from "@prisma/client";
 import { fileUploader } from "../../helpers/fileUploader";
 import { InspectOptions } from "util";
-import { paginationHelper } from "../../helpers/paginationHelper";
+
 import { userSearchField } from "./user.constant";
+import { paginationHelper } from "../../helpers/PaginationHelper";
 
 const createPatient = async (req: Request) => {
 
