@@ -9,7 +9,9 @@ import { UserValidation } from './user.validation';
 const router = express.Router();
 
 
-router.get("/", UserController.GetALlForm)
+router.get("/",
+    auth(UserRole.ADMIN),
+     UserController.GetALlForm)
 
 
 router.post(
