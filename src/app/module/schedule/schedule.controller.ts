@@ -17,10 +17,10 @@ import pick from "../../helpers/pick";
         data: result
     })
 });
+
  const scheduleForDoctor = catchAsync(async (req: Request, res: Response) => {
     const options = pick(req.query, ["page", "limit", "sortBy", "sortOrder"]);
     const filters = pick(req.query, ["startDateTime", "endDateTime"])
-
 
     const result = await ScheduleService.scheduleForDoctor(filters, options)
 
@@ -29,6 +29,20 @@ import pick from "../../helpers/pick";
         statusCode: 201,
         success: true,
         message: "Schedule Created for Doctor!",
+        meta:result.meta,
+        data: result.data
+    })
+});
+
+
+ const deleteSchedule = catchAsync(async (req: Request, res: Response) => {
+    const result = await ScheduleService.deleteSchedule(req.params.id)
+
+    
+    sendResponse(res, {
+        statusCode: 201,
+        success: true,
+        message: " Schedule deleted succesfully...!!",
         data: result
     })
 });
@@ -36,5 +50,6 @@ import pick from "../../helpers/pick";
 
  export const ScheduleController = {
     InsertIntoDb,
-    scheduleForDoctor
+    scheduleForDoctor,
+    deleteSchedule
  }

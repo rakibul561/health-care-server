@@ -8,6 +8,8 @@ router.get('/', ScheduleController.scheduleForDoctor)
 
 router.post("/", ScheduleController.InsertIntoDb)
 
+router.delete("/:id", ScheduleController.deleteSchedule)
+
 
 
 export const ScheduleRoutes =  router;
