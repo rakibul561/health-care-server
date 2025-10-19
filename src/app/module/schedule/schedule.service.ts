@@ -2,6 +2,7 @@ import { addMinutes, addHours, format } from "date-fns";
 import { prisma } from "../../shared/prisma";
 import { Prisma } from "@prisma/client";
 import { paginationHelper } from "../../helpers/PaginationHelper";
+import { IJWTPayload } from "../../types/common";
 
 const insertIntoDB = async (payload: any) => {
 
@@ -65,6 +66,7 @@ const insertIntoDB = async (payload: any) => {
 
 
 const scheduleForDoctor = async (
+  user:IJWTPayload,
   filters:any,
   options:any
 ) =>{
@@ -95,11 +97,31 @@ const scheduleForDoctor = async (
 
         const whereConditions: Prisma.ScheduleWhereInput = andCondition.length > 0 ? {
         AND: andCondition
-    } : {}
+    } : {} 
+
+
+    const doctorSchedules = await prisma.doctorSchedules.findMany({
+      where : {
+        doctor: {
+          email:user.email
+        }
+      },
+      select: {
+        scheduleId:true
+      }
+    }) 
+
+
+    const doctorScheduleIds = doctorSchedules.map(schedule => schedule.scheduleId)
       
 
     const result = await prisma.schedule.findMany({
-      where: whereConditions,
+      where: {
+        ...whereConditions, 
+        id: {
+          notIn:doctorScheduleIds
+        }
+      },
       skip,
       take:limit,
       orderBy: {
@@ -108,7 +130,12 @@ const scheduleForDoctor = async (
     })
 
     const total = await prisma.schedule.count({
-      where: whereConditions
+     where: {
+        ...whereConditions, 
+        id: {
+          notIn:doctorScheduleIds
+        }
+      }
     })
 
        return {
