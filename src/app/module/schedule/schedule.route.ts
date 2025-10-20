@@ -11,9 +11,13 @@ router.get('/',
     
     ,ScheduleController.scheduleForDoctor)
 
-router.post("/", ScheduleController.InsertIntoDb)
+router.post("/",
+     auth(UserRole.ADMIN)
+    ,ScheduleController.InsertIntoDb)
 
-router.delete("/:id", ScheduleController.deleteSchedule)
+router.delete("/:id",
+     auth(UserRole.ADMIN),
+     ScheduleController.deleteSchedule)
 
 
 
