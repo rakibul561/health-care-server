@@ -16,6 +16,8 @@ const inserIntoDB = async (req: Request) => {
         data: req.body
     });
 
+    // returen result is 
+
     return result;
 };
 
