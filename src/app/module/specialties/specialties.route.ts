@@ -1,41 +1,51 @@
-import { Request } from "express";
-import { prisma } from "../../shared/prisma";
-import { Specialties } from "@prisma/client";
-import { fileUploader } from "../../helpers/fileUploader";
+import express, { NextFunction, Request, Response } from 'express';
+import { SpecialtiesController } from './specialties.controller';
+import auth from '../../middlewares/auth';
+import { UserRole } from '@prisma/client';
+import { fileUploader } from '../../helpers/fileUploader';
+import { SpecialtiesValidtaion } from './specialties.validation';
 
-const inserIntoDB = async (req: Request) => {
 
-    const file = req.file;
 
-    if (file) {
-        const uploadToCloudinary = await fileUploader.uploadToCloudinary(file);
-        req.body.icon = uploadToCloudinary?.secure_url;
+const router = express.Router();
+
+
+// Task 1: Retrieve Specialties Data
+
+/**
+- Develop an API endpoint to retrieve all specialties data.
+- Implement an HTTP GET endpoint returning specialties in JSON format.
+- ENDPOINT: /specialties
+*/
+router.get(
+    '/',
+    SpecialtiesController.getAllFromDB
+);
+
+router.post(
+    '/',
+    fileUploader.upload.single('file'),
+    (req: Request, res: Response, next: NextFunction) => {
+        req.body = SpecialtiesValidtaion.create.parse(JSON.parse(req.body.data))
+        return SpecialtiesController.inserIntoDB(req, res, next)
     }
+);
 
-    const result = await prisma.specialties.create({
-        data: req.body
-    });
 
-    // returen result is 
 
-    return result;
-};
+// Task 2: Delete Specialties Data by ID
 
-const getAllFromDB = async (): Promise<Specialties[]> => {
-    return await prisma.specialties.findMany();
-}
+/**
+- Develop an API endpoint to delete specialties by ID.
+- Implement an HTTP DELETE endpoint accepting the specialty ID.
+- Delete the specialty from the database and return a success message.
+- ENDPOINT: /specialties/:id
+*/
 
-const deleteFromDB = async (id: string): Promise<Specialties> => {
-    const result = await prisma.specialties.delete({
-        where: {
-            id,
-        },
-    });
-    return result;
-};
+router.delete(
+    '/:id',
+    auth(UserRole.ADMIN, UserRole.ADMIN),
+    SpecialtiesController.deleteFromDB
+);
 
-export const SpecialtiesService = {
-    inserIntoDB,
-    getAllFromDB,
-    deleteFromDB
-}
+export const SpecialtiesRoutes = router;

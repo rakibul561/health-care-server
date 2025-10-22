@@ -8,7 +8,7 @@ import { DoctorScheduleValidation } from "./doctorScheduleValidation";
 
 const router = Router()
 
-router.post("/schedule",
+router.post("/",
     auth(UserRole.DOCTOR),
     validateRequest(DoctorScheduleValidation.createDoctorScheduleValidationSchema)
     ,doctorScheduleController.InsertIntoDb)
