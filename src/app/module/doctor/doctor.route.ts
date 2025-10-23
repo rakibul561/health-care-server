@@ -16,6 +16,11 @@ router.patch(
     auth(UserRole.ADMIN, UserRole.DOCTOR),
     DoctorController.updateIntoDB
 );
+// router.patch(
+//     "/:id",
+//     auth(UserRole.ADMIN, UserRole.DOCTOR),
+//     DoctorController.updateIntoDB
+// );
 
 
 
