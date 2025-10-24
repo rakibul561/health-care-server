@@ -37,6 +37,23 @@ const updateIntoDB = catchAsync(async (req: Request, res: Response) => {
 })
 
 
+const getAiSuggetion = catchAsync(async (req: Request, res: Response) => {
+
+
+
+    const result = await DoctorService.getAiSuggetion(req.body);
+
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "Doctor updated successfully!",
+        data: result
+    })
+})
+
+
+
+
 
 
 
@@ -44,5 +61,6 @@ const updateIntoDB = catchAsync(async (req: Request, res: Response) => {
 export const DoctorController = {
     getAllFromDB,
     updateIntoDB,
+    getAiSuggetion
     
 }

@@ -10,6 +10,8 @@ router.get(
 );
 
 
+router.post("/suggestion", DoctorController.getAiSuggetion)
+
 
 router.patch(
     "/:id",
