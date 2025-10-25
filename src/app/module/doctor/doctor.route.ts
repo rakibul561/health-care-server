@@ -9,20 +9,26 @@ router.get(
     DoctorController.getAllFromDB
 );
 
+router.post("/suggestion", DoctorController.getAISuggestions);
 
-router.post("/suggestion", DoctorController.getAiSuggetion)
-
+router.get('/:id', DoctorController.getByIdFromDB);
 
 router.patch(
     "/:id",
     auth(UserRole.ADMIN, UserRole.DOCTOR),
     DoctorController.updateIntoDB
 );
-// router.patch(
-//     "/:id",
-//     auth(UserRole.ADMIN, UserRole.DOCTOR),
-//     DoctorController.updateIntoDB
-// );
+
+router.delete(
+    '/:id',
+    auth(UserRole.ADMIN),
+    DoctorController.deleteFromDB
+);
+
+router.delete(
+    '/soft/:id',
+    auth(UserRole.ADMIN),
+    DoctorController.softDelete);
 
 
 
