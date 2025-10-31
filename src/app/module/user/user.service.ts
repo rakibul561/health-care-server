@@ -162,6 +162,7 @@ const GetALlForm = async (params:any, options:any) => {
 };
 
 
+
 export const UserService = {
     createPatient,
     createAdmin,
